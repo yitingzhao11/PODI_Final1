@@ -14,6 +14,14 @@ import seaborn as sns
 
 from src.utils import load_data
 
+##########################################################
+# Cache Dataset
+##########################################################
+
+@st.cache_data(show_spinner="Loading mortgage data...")
+def cached_load_data():
+    return load_data()
+
 
 ##########################################################
 # Sidebar Filters
@@ -22,6 +30,10 @@ from src.utils import load_data
 def filter_data(data):
 
     st.sidebar.header("Filters")
+
+    st.sidebar.caption(
+        "Selections are combined. Clear a filter to include all values."
+    )
 
     gender_options = sorted(
         data["Gender"]
@@ -33,6 +45,18 @@ def filter_data(data):
         "Gender",
         options=gender_options,
         default=gender_options
+    )
+
+    married_options = sorted(
+        data["Married"]
+        .dropna()
+        .unique()
+)
+
+    selected_married = st.sidebar.multiselect(
+        "Marital Status",
+        options=married_options,
+        default=married_options
     )
 
     area_options = sorted(
@@ -59,13 +83,35 @@ def filter_data(data):
         default=education_options
     )
 
+    job_options = sorted(
+        data["Job"]
+        .dropna()
+        .unique()
+    )
+
+    selected_job = st.sidebar.multiselect(
+        "Job",
+        options=job_options,
+        default=job_options
+    )
+
     filtered = data.loc[
         (data["Gender"].isin(selected_gender))
+        &
+        (data["Married"].isin(selected_married))
         &
         (data["Area"].isin(selected_area))
         &
         (data["Education"].isin(selected_education))
+        &
+        (data["Job"].isin(selected_job))
     ]
+
+    st.sidebar.divider()
+
+    st.sidebar.caption(
+        f"Source records: {len(data):,}"
+    )
 
     return filtered
 
@@ -112,6 +158,8 @@ def render_kpis(data):
         f"${avg_loan:,.0f}"
     )
 
+    st.divider()
+
 
 ##########################################################
 # Bar Chart
@@ -120,6 +168,13 @@ def render_kpis(data):
 def render_bar_chart(data):
 
     st.markdown("## 📊 Average Metrics by Category")
+
+    st.markdown(
+    """
+    Compare the average value of different financial metrics across borrower groups.
+    Choose both the grouping category and the metric below.
+    """
+    )
 
     grouping_options = {
 
@@ -204,8 +259,11 @@ def render_bar_chart(data):
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        use_container_width=True,
+        config={"displayModeBar": False}
     )
+
+    st.divider()
 
 
 ##########################################################
@@ -215,6 +273,13 @@ def render_bar_chart(data):
 def render_line_chart(data):
 
     st.markdown("## 📈 Trends Across Age Groups")
+
+    st.markdown(
+    """
+    Observe how the selected financial metric changes across applicant ages.
+    This chart highlights overall trends rather than individual observations.
+    """
+    )
 
     metric_options = {
 
@@ -270,8 +335,12 @@ def render_line_chart(data):
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        use_container_width=True,
+        config={"displayModeBar": False}
     )
+
+    st.divider()
+
 
 
 ##########################################################
@@ -280,8 +349,18 @@ def render_line_chart(data):
 
 def render_heatmap(data):
 
-    st.markdown(
+    st.subheader(
         "🔥 Correlation Between Financial Variables"
+    )
+
+    st.markdown(
+    """
+    The heatmap summarizes correlations among numeric variables.
+
+    - Values close to **+1** indicate strong positive relationships.
+    - Values close to **−1** indicate strong negative relationships.
+    - Values near **0** indicate weak linear relationships.
+    """
     )
 
     numeric_columns = [
@@ -343,19 +422,34 @@ def render():
     st.title("📊 Data Visualization Dashboard")
 
     st.caption(
-        "Explore borrower characteristics, financial trends, and loan patterns."
+        "Explore borrower characteristics, financial trends, and mortgage loan patterns. "
+        "Use the sidebar filters to focus the analysis—every KPI and visualization updates automatically."
     )
 
-    data = load_data()
+    try:
+
+        data = cached_load_data()
+
+    except Exception as e:
+
+        st.error(
+            f"Unable to load dataset.\n\n{e}"
+        )
+
+        st.stop()
 
     filtered = filter_data(
         data
     )
 
+    st.caption(
+        f"Showing {len(filtered):,} of {len(data):,} applicant records"
+    )
+
     if filtered.empty:
 
         st.warning(
-            "No data available."
+            "No applicants match this filter combination. Adjust the sidebar filters."
         )
 
         return
@@ -381,12 +475,18 @@ def render():
     )
 
     with st.expander(
-        "Preview Data"
+        "View Filtered Dataset"
     ):
 
+        rows = st.slider(
+            "Rows to display",
+            min_value=10,
+            max_value=500,
+            value=50
+        )
+
         st.dataframe(
-            filtered.head(
-                500
-            ),
-            use_container_width=True
+            filtered.head(rows),
+            use_container_width=True,
+            hide_index=True
         )

@@ -81,9 +81,36 @@ def render_data_overview(df):
     missing = missing[missing > 0]
 
     if missing.empty:
-        st.success("No missing values found.")
+
+        st.success("✅ No missing values found.")
+
     else:
-        st.dataframe(missing.to_frame("Missing Values"))
+
+        st.warning(
+            f"{missing_count:,} missing values were found."
+        )
+
+        st.dataframe(
+            missing.to_frame("Missing Values"),
+            use_container_width=True
+        )
+
+    
+    #######################################################
+
+    st.markdown(
+        "### Duplicate Rows"
+    )
+
+    if duplicate_count == 0:
+
+        st.success("✅ No duplicate rows found.")
+
+    else:
+
+        st.warning(
+            f"{duplicate_count:,} duplicate rows were found."
+        )
 
     #######################################################
 
@@ -91,20 +118,18 @@ def render_data_overview(df):
         "### Column Information"
     )
 
-    column_info=pd.DataFrame({
+    column_info = pd.DataFrame({
 
-        "Column":
-        df.columns,
+        "Column": df.columns,
 
-        "Data Type":
-        df.dtypes.astype(str),
+        "Data Type": df.dtypes.astype(str),
 
-        "Missing":
-        df.isna().sum(),
+        "Non-Null Values": df.notna().sum(),
 
-        "Missing %":
-        (
-            df.isna().mean()*100
+        "Missing": df.isna().sum(),
+
+        "Missing %": (
+            df.isna().mean() * 100
         ).round(2)
 
     })
@@ -174,7 +199,8 @@ def render_data_overview(df):
 
         st.plotly_chart(
             fig,
-            use_container_width=True
+            use_container_width=True,
+            config={"displayModeBar": False}
         )
 
 

@@ -33,6 +33,7 @@ from src import page_prediction
 from src import page_explainability
 from src import page_tuning
 from src import wandb_tracker
+from src import page_conclusion
 
 # ==========================================================
 # Sidebar
@@ -68,7 +69,10 @@ with st.sidebar:
             page_explainability,
 
         "⚙️ Hyperparameter Tuning":
-            page_tuning
+            page_tuning,
+
+        "📄 Conclusion":
+            page_conclusion
     }
 
     st.subheader("📂 Navigation")
