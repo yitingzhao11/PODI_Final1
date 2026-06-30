@@ -20,6 +20,9 @@ try:
 
     _ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 
+    # Load the .env file here
+    load_dotenv(_ENV_PATH)
+
 except ImportError:
     pass
 
@@ -96,4 +99,4 @@ def status_badge() -> None:
         project = os.environ.get("WANDB_PROJECT", "ds4e-final-project")
         st.caption(f"📡 W&B tracking: **ON** · project `{project}`")
     else:
-        st.caption("📡 W&B tracking: **OFF** (set WANDB_API_KEY in `.env`)")
+        st.caption("📡 W&B tracking: **OFF** (set WANDB_API_KEY in .env)")
