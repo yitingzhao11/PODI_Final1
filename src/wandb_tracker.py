@@ -97,3 +97,5 @@ def status_badge() -> None:
         st.caption(f"📡 W&B tracking: **ON** · project `{project}`")
     else:
         st.caption("📡 W&B tracking: **OFF** (set WANDB_API_KEY in `.env`)")
+
+    st.write("Loaded key:", repr(os.environ.get("WANDB_API_KEY")))

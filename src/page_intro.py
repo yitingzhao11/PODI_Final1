@@ -9,6 +9,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from pathlib import Path
 
 from src.utils import load_data
 
@@ -288,56 +289,25 @@ def render():
 
     """,unsafe_allow_html=True)
 
-    ##########################################################
-    # Hero Banner
-    ##########################################################
+    st.title("🏦 Mortgage Loan Prediction")
 
-    st.markdown("""
+    st.caption(
+        "An interactive machine learning application for exploring mortgage loan data, "
+        "predicting maximum loan amounts, and interpreting model predictions."
+    )
 
-    <div class="hero-banner">
+    st.divider()
 
-    <h1>🏦 Mortgage Loan Prediction Dashboard</h1>
+    image_path = Path(__file__).resolve().parent.parent / "assets" / "mortgage_loan.jpg"
 
-    <p>
-    AI-powered analytics platform predicting maximum mortgage loan amount.
-    </p>
 
-    <div class="hero-stats">
+    col1, col2, col3 = st.columns([1, 6, 1])
 
-        <div class="hero-stat">
-            <h2>2</h2>
-            <span>Models</span>
-        </div>
+    with col2:
+        st.image(image_path, use_container_width=True)
 
-        <div class="hero-stat">
-            <h2>13</h2>
-            <span>Features</span>
-        </div>
 
-        <div class="hero-stat">
-            <h2>1</h2>
-            <span>Target Variable</span>
-        </div>
-
-    </div>
-
-    <br>
-
-    <span class="badge">
-    📈 Linear Regression
-    </span>
-
-    <span class="badge">
-    🌲 Random Forest
-    </span>
-
-    <span class="badge">
-    🤖 ML Prediction
-    </span>
-
-    </div>
-
-    """,unsafe_allow_html=True)
+    st.divider()
 
     ##########################################################
     # Load Data
@@ -354,41 +324,33 @@ def render():
     # Business Problem
     ##########################################################
 
-    st.markdown(
-        "## 🎯 Business Problem"
-    )
+    st.subheader("🎯 Business Problem")
 
-    st.markdown("""
+    st.info("""
+    Mortgage approval decisions can be time-consuming, difficult to scale, and susceptible to human bias.
 
-Mortgage approval decisions can be:
+    **Project Objective**
 
-- Time-consuming
-- Difficult to scale
-- Subject to human bias
+    Predict the **Maximum Loan Amount (USD)** using borrower characteristics such as:
 
-### Objective
+    - Annual Income
+    - Credit Score
+    - Existing Monthly Debt
+    - Down Payment
+    - Employment History
+    - Education Level
 
-Predict **Maximum Loan Amount (USD)** using:
+    **Business Value**
 
-- Income
-- Credit Score
-- Existing Debt
-- Down Payment
-- Education
-- Employment History
+    - Faster loan approval decisions
+    - Improved risk assessment
+    - More consistent lending decisions
+    - Enhanced customer experience
+    """)
 
-### Business Benefits
-
-✅ Faster decisions
-
-✅ Lower risk
-
-✅ Better customer experience
-
-""")
 
     ##########################################################
     # Call overview section
     ##########################################################
-
+    st.divider()
     render_data_overview(df)

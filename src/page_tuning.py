@@ -22,13 +22,18 @@ from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
+import wandb
 from src import wandb_tracker
+from datetime import datetime
+import os
+
+
 
 RANDOM_STATE = 42
 
 
 def render():
-    st.title("⚙️ Hyperparameter Tuning")
+    st.title("⚙️ Mortgage Loan Hyperparameter Tuning")
 
     st.caption(
         """
@@ -177,13 +182,20 @@ def render():
 
         if track_wandb:
             wb_run = wandb_tracker.init_run(
-                run_name = f"{model_name}_tuning",
+                run_name = (
+                    f"{model_name}_"
+                    f"{datetime.now():%Y%m%d_%H%M%S}"
+                ),
                 config = {
                     "model": model_name,
                     "trials": number_trials,
                     "cv": cv
                 }
             )
+
+            if wb_run:
+                st.success("Weights & Biases tracking enabled!")
+                st.write(f"Run URL: {wb_run.url}")
 
         def objective(trial):
 
@@ -289,7 +301,25 @@ def render():
                 scoring="r2"
             )
 
-            return scores.mean()
+            score = scores.mean()
+
+            if wb_run:
+                wandb_tracker.log_metrics(
+                    wb_run,
+                    {
+                        "trial": trial.number,
+                        "cv_r2": score,
+                        **trial.params,
+                        "Test R2": r2,
+                        "Test MAE": mae,
+                        "Test RMSE": rmse,
+                        "Best CV R2": study.best_value
+
+                    },
+                    step=trial.number
+                )
+
+            return score
 
         progress = st.progress(0)
 
@@ -314,6 +344,12 @@ def render():
 ##########################################################
 
         best_params = study.best_params
+
+        if wb_run:
+            wb_run.config.update(
+                {"best_params": best_params},
+                allow_val_change=True
+            )
 
         if model_name == "Ridge":
 
@@ -401,6 +437,10 @@ def render():
 
         trials_df = study.trials_dataframe()
 
+        if wb_run:
+            table = wandb.Table(dataframe=trials_df)
+            wb_run.log({"Optimization History": table})
+
         fig = px.line(
             trials_df,
             x = "number",
@@ -463,7 +503,22 @@ def render():
                     "RMSE": rmse
                 }
             )
+        
+        if wb_run:
+            wb_run.log({
+                "Optimization Progress": fig,
+                "Actual vs Predicted": fig2
+            })
 
         wandb_tracker.finish_run(
             wb_run
         )
+
+
+    st.write("W&B Available:", wandb_tracker.is_available())
+    st.write("API Key Loaded:", bool(os.environ.get("WANDB_API_KEY")))
+    st.write("Project:", os.environ.get("WANDB_PROJECT"))
+
+    key = os.environ.get("WANDB_API_KEY", "")
+    st.write("Key starts with:", key[:10])
+    st.write("Length:", len(key))

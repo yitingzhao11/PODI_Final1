@@ -6,7 +6,7 @@ Mortgage Loan Prediction Project
 Uses:
 
 ✓ SHAP
-✓ Feature Importance
+✓ Model Importance
 ✓ Permutation Importance
 ✓ Linear Regression
 ✓ Random Forest
@@ -18,7 +18,6 @@ import pandas as pd
 import numpy as np
 import shap
 import plotly.express as px
-import plotly.graph_objects as go
 
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
@@ -29,56 +28,24 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.inspection import permutation_importance
 
 def render():
-    ############################################################
-    # Styling
-    ############################################################
+
+    st.title("🔍 Explainability Analysis")
+
+    st.caption(
+        "Understand which borrower characteristics most strongly influence predicted mortgage loan amounts."
+    )
+
+    st.divider()
 
     st.markdown("""
     <style>
 
     .stApp{
-    background-color:#F8FAFC;
-    }
-
-    .main-title{
-    background:linear-gradient(
-    135deg,
-    #0F172A,
-    #1E3A8A,
-    #2563EB
-    );
-
-    padding:2rem;
-    border-radius:25px;
-    color:white;
-    text-align:center;
-    margin-bottom:2rem;
-    box-shadow:0 10px 30px rgba(0,0,0,0.15);
-    }
-
-    .card{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
+        background-color:#F8FAFC;
     }
 
     </style>
-    """,unsafe_allow_html=True)
-
-
-    st.markdown("""
-    <div class='main-title'>
-
-    <h1>🔍 Explainable AI Dashboard</h1>
-
-    <p>
-    Understand what drives mortgage loan predictions and discover
-    the most important borrower characteristics.
-    </p>
-
-    </div>
-    """,unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     ############################################################
     # Load Data
@@ -174,18 +141,27 @@ def render():
     # Model Choice
     ############################################################
 
-    st.subheader(
-    "Choose Model"
+    st.subheader("Model Selection")
+
+    model_choice = st.selectbox(
+        "Select a prediction model",
+        [
+            "Linear Regression",
+            "Random Forest"
+        ]
     )
 
-    model_choice=st.selectbox(
+    st.info(
+    """
+    This page explains how the selected machine learning model predicts
+    maximum mortgage loan amounts.
 
-    "",
-    [
-    "Linear Regression",
-    "Random Forest"
-    ]
+    Three complementary explainability techniques are provided:
 
+    • Model Importance\n
+    • Permutation Importance\n
+    • SHAP Values\n
+    """
     )
 
     ############################################################
@@ -279,21 +255,26 @@ def render():
 
     tab1,tab2,tab3=st.tabs([
 
-    "🌲 Feature Importance",
+    "🌲 Model Importance",
     "🔀 Permutation",
     "💎 SHAP"
 
     ])
 
     ############################################################
-    # Feature Importance
+    # Model Importance
     ############################################################
 
     with tab1:
 
         st.subheader(
-            "Feature Importance"
+            "Model Importance"
         )
+
+        st.markdown("""
+        Built-in feature importance estimates how much each variable contributes
+        to predicting the maximum mortgage loan amount.
+        """)
 
         if model_choice=="Random Forest":
 
@@ -340,6 +321,13 @@ def render():
 
         )
 
+        fig.update_layout(
+            template="plotly_white",
+            height=450,
+            title_x=0.5,
+            margin=dict(l=20,r=20,t=40,b=20)
+        )
+
         st.plotly_chart(
         fig,
         use_container_width=True
@@ -354,6 +342,12 @@ def render():
         st.subheader(
         "Permutation Importance"
         )
+
+        st.markdown("""
+        Permutation importance measures how much model performance decreases
+        when a feature's values are randomly shuffled.
+        Larger decreases indicate more influential variables.
+        """)
 
         perm=(
         permutation_importance(
@@ -396,6 +390,13 @@ def render():
 
         )
 
+        fig.update_layout(
+            template="plotly_white",
+            height=450,
+            title_x=0.5,
+            margin=dict(l=20,r=20,t=40,b=20)
+        )
+
         st.plotly_chart(
         fig,
         use_container_width=True
@@ -411,14 +412,11 @@ def render():
         "SHAP Analysis"
         )
 
-        st.info(
-        """
-        SHAP explains how each borrower characteristic
-        contributes to the final loan prediction.
-        Positive values increase prediction.
-        Negative values decrease prediction.
-        """
-        )
+        st.markdown("""
+        SHAP (SHapley Additive exPlanations) explains how each borrower
+        characteristic increases or decreases the predicted loan amount
+        for individual observations.
+        """)
 
         if model_choice=="Random Forest":
 
@@ -489,6 +487,13 @@ def render():
 
         )
 
+        fig.update_layout(
+            template="plotly_white",
+            height=450,
+            title_x=0.5,
+            margin=dict(l=20,r=20,t=40,b=20)
+        )
+
         st.plotly_chart(
         fig,
         use_container_width=True
@@ -500,22 +505,25 @@ def render():
 
     st.markdown("---")
 
-    st.markdown(
-    """
-    ### 💡 Key Interpretation
+    st.subheader("💡 Interpretation")
 
-    Features with larger values have stronger influence on loan prediction.
+    st.markdown("""
+    The explainability analysis highlights which borrower characteristics have
+    the greatest influence on the predicted maximum mortgage loan amount.
 
-    Typical drivers:
+    Typical high-impact features include:
 
-    ✅ Annual Income  
-    ✅ Credit Score  
-    ✅ Down Payment  
-    ✅ Existing Debt  
-    ✅ Employment Years  
+    - Annual Income (USD)
+    - Credit Score
+    - Down Payment (USD)
+    - Existing Monthly Debt (USD)
+    - Employment Years
 
-    Positive SHAP values push predicted loan amount upward.
+    Across all three methods, features with higher importance values have a
+    greater influence on the model's predictions.
 
-    Negative SHAP values reduce predicted loan amount.
-    """
-    )
+    For SHAP analysis:
+
+    - Positive SHAP values increase the predicted loan amount.
+    - Negative SHAP values decrease the predicted loan amount.
+    """)

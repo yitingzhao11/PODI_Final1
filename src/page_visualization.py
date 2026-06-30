@@ -119,9 +119,7 @@ def render_kpis(data):
 
 def render_bar_chart(data):
 
-    st.subheader(
-        "Bar Chart 📊"
-    )
+    st.markdown("## 📊 Average Metrics by Category")
 
     grouping_options = {
 
@@ -195,6 +193,15 @@ def render_bar_chart(data):
         title=f"{metric_label} by {group_label}"
     )
 
+    fig.update_layout(
+        template="plotly_white",
+        title_x=0.5,
+        font=dict(size=15),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+
     st.plotly_chart(
         fig,
         use_container_width=True
@@ -207,9 +214,7 @@ def render_bar_chart(data):
 
 def render_line_chart(data):
 
-    st.subheader(
-        "Line Chart 📈"
-    )
+    st.markdown("## 📈 Trends Across Age Groups")
 
     metric_options = {
 
@@ -254,6 +259,15 @@ def render_line_chart(data):
 
     )
 
+    fig.update_layout(
+        template="plotly_white",
+        title_x=0.5,
+        font=dict(size=15),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+
     st.plotly_chart(
         fig,
         use_container_width=True
@@ -266,8 +280,8 @@ def render_line_chart(data):
 
 def render_heatmap(data):
 
-    st.subheader(
-        "Correlation Heatmap 🔥"
+    st.markdown(
+        "🔥 Correlation Between Financial Variables"
     )
 
     numeric_columns = [
@@ -326,14 +340,11 @@ def render_heatmap(data):
 
 def render():
 
-    st.title(
-        "🏠 Mortgage Loan Visualization Dashboard"
-    )
+    st.title("📊 Data Visualization Dashboard")
 
-    st.markdown("""
-        Explore trends in borrower characteristics, loan amounts,
-        credit scores, and financial variables through interactive visualizations.
-    """)
+    st.caption(
+        "Explore borrower characteristics, financial trends, and loan patterns."
+    )
 
     data = load_data()
 
