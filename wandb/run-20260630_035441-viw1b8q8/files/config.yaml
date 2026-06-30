@@ -1,0 +1,60 @@
+_wandb:
+    value:
+        cli_version: 0.28.0
+        e:
+            yynfcoxy6cl76t8d45ek0aqu50hy4xdy:
+                codePath: streamlit_app.py
+                codePathLocal: streamlit_app.py
+                cpu_count: 1
+                cpu_count_logical: 2
+                disk:
+                    /:
+                        total: "33636024320"
+                        used: "11883749376"
+                email: yitingzhao13@gmail.com
+                executable: /usr/local/bin/python3.11
+                git:
+                    commit: f83e2f694bdbf8b83df7b5c3a2c9a26dde33d150
+                    remote: https://github.com/yitingzhao11/PODI_Final1
+                host: codespaces-5ff883
+                memory:
+                    total: "8330444800"
+                os: Linux-6.8.0-1052-azure-x86_64-with-glibc2.41
+                program: /workspaces/PODI_Final1/streamlit_app.py
+                python: CPython 3.11.15
+                root: /workspaces/PODI_Final1
+                startedAt: "2026-06-30T03:54:41.267946Z"
+                writerId: yynfcoxy6cl76t8d45ek0aqu50hy4xdy
+        m: []
+        python_version: 3.11.15
+        t:
+            "1":
+                - 5
+                - 35
+                - 53
+                - 105
+            "2":
+                - 5
+                - 35
+                - 53
+                - 105
+            "3":
+                - 2
+                - 13
+                - 16
+                - 61
+            "4": 3.11.15
+            "5": 0.28.0
+            "10":
+                - 20
+            "12": 0.28.0
+            "13": linux-x86_64
+best_params:
+    value:
+        alpha: 1.2228476389969125
+cv:
+    value: 5
+model:
+    value: Ridge
+trials:
+    value: 15

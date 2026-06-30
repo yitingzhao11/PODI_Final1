@@ -17,9 +17,9 @@ import streamlit as st
 
 try:
     from dotenv import load_dotenv
+
     _ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
-    if _ENV_PATH.exists():
-        load_dotenv(_ENV_PATH)
+
 except ImportError:
     pass
 
@@ -97,5 +97,3 @@ def status_badge() -> None:
         st.caption(f"📡 W&B tracking: **ON** · project `{project}`")
     else:
         st.caption("📡 W&B tracking: **OFF** (set WANDB_API_KEY in `.env`)")
-
-    st.write("Loaded key:", repr(os.environ.get("WANDB_API_KEY")))

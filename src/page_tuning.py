@@ -48,7 +48,9 @@ def render():
 # LOAD DATASET
 ########################################################
 
-    df = pd.read_csv("mortgage_loan_dataset.csv")
+    from src.utils import load_data
+
+    df = load_data()
 
     target = "Max Loan Amount (USD)"
 
@@ -310,11 +312,6 @@ def render():
                         "trial": trial.number,
                         "cv_r2": score,
                         **trial.params,
-                        "Test R2": r2,
-                        "Test MAE": mae,
-                        "Test RMSE": rmse,
-                        "Best CV R2": study.best_value
-
                     },
                     step=trial.number
                 )
@@ -513,12 +510,3 @@ def render():
         wandb_tracker.finish_run(
             wb_run
         )
-
-
-    st.write("W&B Available:", wandb_tracker.is_available())
-    st.write("API Key Loaded:", bool(os.environ.get("WANDB_API_KEY")))
-    st.write("Project:", os.environ.get("WANDB_PROJECT"))
-
-    key = os.environ.get("WANDB_API_KEY", "")
-    st.write("Key starts with:", key[:10])
-    st.write("Length:", len(key))

@@ -196,11 +196,11 @@ def render():
                 mean_val = float(df[feature].mean())
 
                 input_data[feature]=st.number_input(
-
-    feature,
-    value=float(mean_val)
-
-    )
+                                            feature,
+                                            min_value=min_val,
+                                            max_value=max_val,
+                                            value=mean_val
+                                        )
 
             else:
 

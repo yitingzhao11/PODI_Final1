@@ -224,13 +224,9 @@ def render():
     # Get transformed features
     ############################################################
 
-    X_train_encoded=(
-    model.named_steps[
-    'preprocessor'
-    ]
-    .fit_transform(
-    X_train
-    )
+    X_train_encoded = (
+        model.named_steps["preprocessor"]
+        .transform(X_train)
     )
 
     X_test_encoded=(
@@ -310,6 +306,8 @@ def render():
 
         importance_df.tail(15),
 
+        title = 'Model Importance',
+
         x='Importance',
         y='Feature',
 
@@ -378,6 +376,8 @@ def render():
         fig=px.bar(
 
         perm_df,
+
+        title = 'Permutation',
 
         x='Importance',
         y='Feature',
@@ -475,6 +475,8 @@ def render():
         fig=px.bar(
 
         shap_df.tail(15),
+
+        title = "SHAP",
 
         x='SHAP Importance',
         y='Feature',
