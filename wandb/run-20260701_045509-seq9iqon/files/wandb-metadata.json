@@ -1,0 +1,28 @@
+{
+  "os": "Linux-6.8.0-1052-azure-x86_64-with-glibc2.41",
+  "python": "CPython 3.11.15",
+  "startedAt": "2026-07-01T04:55:09.946162Z",
+  "program": "/workspaces/PODI_Final1/streamlit_app.py",
+  "codePath": "streamlit_app.py",
+  "codePathLocal": "streamlit_app.py",
+  "git": {
+    "remote": "https://github.com/yitingzhao11/PODI_Final1",
+    "commit": "b74706eee51ced7c39e85ec6b6d1f4209250d4ac"
+  },
+  "email": "yitingzhao13@gmail.com",
+  "root": "/workspaces/PODI_Final1",
+  "host": "codespaces-5ff883",
+  "executable": "/usr/local/bin/python3.11",
+  "cpu_count": 1,
+  "cpu_count_logical": 2,
+  "disk": {
+    "/": {
+      "total": "33636024320",
+      "used": "11889537024"
+    }
+  },
+  "memory": {
+    "total": "8330444800"
+  },
+  "writerId": "umiiiiahj6wpam4ed2o8cebhusk75fzp"
+}

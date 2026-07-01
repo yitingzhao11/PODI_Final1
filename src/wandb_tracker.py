@@ -97,6 +97,6 @@ def status_badge() -> None:
     """Render a sidebar badge indicating W&B status."""
     if is_available():
         project = os.environ.get("WANDB_PROJECT", "ds4e-final-project")
-        st.caption(f"📡 W&B tracking: **ON** · project `{project}`")
+        st.caption(f"📡 W&B tracking: **ON** · project {project}")
     else:
         st.caption("📡 W&B tracking: **OFF** (set WANDB_API_KEY in .env)")

@@ -18,21 +18,19 @@ def render():
 
     st.header("📊 Dataset Analysis")
 
-    st.write(
+    st.markdown(
         """
-        The mortgage dataset contains applicant demographic, financial,
-        employment, and loan-related information that can be used to
-        predict the maximum eligible mortgage loan amount.
+The mortgage dataset contains applicant demographic, financial,
+employment, property, and loan-related information used to predict the
+maximum eligible mortgage loan amount.
 
-        During exploratory data analysis, numerical variables such as
-        applicant income, loan amount, credit score, interest rate,
-        employment history, and debt were examined to understand their
-        distributions and identify potential outliers.
-
-        Categorical variables including education level, marital status,
-        occupation, gender, and residential area were prepared for
-        machine learning using appropriate encoding techniques.
-        """
+During exploratory data analysis, numerical variables such as applicant
+income, credit score, employment history, interest rate, debt, and loan
+amount were examined to identify trends and potential outliers.
+Categorical variables including education, marital status, occupation,
+gender, and residential area were encoded to prepare the data for
+machine learning models.
+"""
     )
 
     st.divider()
@@ -45,45 +43,33 @@ def render():
 
     st.markdown(
         """
-### 1. Credit Score
+### 1. Credit History / Credit Score
 
-Credit score is the strongest predictor of mortgage eligibility because it reflects an applicant's history of managing debt. Applicants with stronger credit profiles generally qualify for higher loan amounts and present lower lending risk.
-
----
-
-### 2. Annual Income
-
-Applicant income measures the ability to repay a mortgage. Higher annual income typically increases the maximum loan amount because lenders consider these applicants financially stronger.
+Credit history is the strongest predictor because it reflects an applicant's ability to repay previous debts. Applicants with stronger credit profiles are generally considered financially reliable and are more likely to qualify for larger mortgage loans.
 
 ---
 
-### 3. Maximum Loan Amount
+### 2. Applicant Income
 
-Requested loan amount directly affects lending risk. Larger loan requests generally require stronger financial qualifications before approval.
+Applicant income measures repayment capacity. Higher income generally increases borrowing power because lenders view these applicants as lower financial risk.
+
+---
+
+### 3. Loan Amount
+
+The requested loan amount directly affects lending decisions. Larger loan requests typically require stronger financial qualifications and therefore carry greater lending risk.
 
 ---
 
 ### 4. Employment Stability
 
-Employment history provides evidence of consistent income. Applicants with longer employment histories are usually viewed as more financially stable and reliable borrowers.
+Employment status and employment history demonstrate consistent income. Applicants with stable, long-term employment are generally viewed as more reliable borrowers.
 
 ---
 
-### 5. Existing Monthly Debt
+### 5. Supporting Features
 
-Debt obligations relative to income help lenders evaluate financial burden. Lower debt levels generally improve borrowing capacity and reduce lending risk.
-
----
-
-### 6. Property Characteristics
-
-Property-related information contributes additional context by representing the value of the loan collateral. Lower-risk properties may improve lending confidence.
-
----
-
-### 7. Applicant Demographics
-
-Features such as age, education, marital status, gender, and residential area contribute supporting information but generally have less influence than financial variables.
+Existing debt, property characteristics, education, marital status, gender, and residential area provide additional information that helps improve overall prediction accuracy.
 """
     )
 
@@ -95,32 +81,48 @@ Features such as age, education, marital status, gender, and residential area co
 
     st.header("📈 Overall Findings")
 
-    st.info(
+    st.markdown(
         """
-The exploratory analysis indicates that **financial variables are the primary drivers** of mortgage predictions.
+The analysis shows that **financial factors** have the greatest influence
+on mortgage predictions. Among all variables, **Credit History**,
+**Applicant Income**, and **Loan Amount** contribute most significantly
+because they directly represent financial reliability and repayment
+ability.
 
-Among all features, **Credit Score**, **Annual Income**, and **Maximum Loan Amount** contribute most significantly because they directly represent an applicant's repayment ability and financial risk.
-
-Employment-related variables strengthen prediction accuracy by reflecting income stability, while property characteristics provide additional information regarding loan security.
+Employment stability, existing debt, and property-related features
+provide additional context that improves prediction accuracy and enables
+the models to generate more reliable mortgage loan estimates.
 """
     )
 
     st.divider()
 
     ##########################################################
-    # Final Conclusion
+    # Project Conclusion
     ##########################################################
 
     st.header("✅ Project Conclusion")
 
-    st.success(
+    st.markdown(
         """
-This application demonstrates how machine learning can assist in evaluating mortgage applications using applicant financial, employment, demographic, and loan-related information.
+This application demonstrates how machine learning can support mortgage
+lending decisions by predicting the maximum eligible mortgage loan
+amount using applicant financial, employment, demographic, and
+property-related information.
 
-Users can explore the dataset, visualize important trends, generate mortgage loan predictions, and understand model behavior through explainable AI techniques.
+Users can explore the dataset, visualize important trends, compare
+multiple regression models, optimize model performance through
+hyperparameter tuning, generate mortgage predictions, and understand
+model behavior using explainable AI techniques.
 
-Overall, the analysis shows that **Credit Score**, **Annual Income**, and **Existing Financial Obligations** are the strongest factors influencing mortgage decisions, while employment stability and property information further improve prediction performance.
+Overall, **Credit History**, **Applicant Income**, and **Loan Amount**
+are the strongest factors influencing mortgage predictions because they
+directly reflect repayment ability and financial risk. Employment
+stability, existing debt, and property characteristics further improve
+prediction performance by providing additional borrower context.
 
-The application provides lenders and analysts with an interactive decision-support tool that improves consistency, increases efficiency, and promotes greater transparency in mortgage lending decisions.
+Hyperparameter tuning is performed using **Optuna**, which automatically
+searches for the optimal combination of model parameters to improve
+prediction accuracy while reducing the need for manual trial-and-error.
 """
     )

@@ -84,7 +84,30 @@ def render():
 # Configuration/Interactive Features
 ##########################################################
 
+##########################################################
+# Configuration/Interactive Features
+##########################################################
+
     st.subheader("Configuration")
+
+    optimization_mode = st.radio(
+        "Optimization Mode",
+        [
+            "⚡ Quick Optimization",
+            "🔬 Full Optimization"
+        ],
+        horizontal=True
+    )
+
+    if optimization_mode.startswith("⚡"):
+        st.info(
+            "⚡ Quick Optimization uses fewer trials and a smaller search space to return results much faster."
+        )
+        
+    else:
+        st.info(
+            "🔬 Full Optimization performs a more comprehensive hyperparameter search for potentially better performance."
+        )
 
     c1, c2, c3 = st.columns(3)
 
@@ -94,21 +117,34 @@ def render():
             ["Ridge", "Random Forest", "Gradient Boosting"]
         )
 
-    with c2:
-        number_trials = st.slider(
-            "Number of trials",
-            min_value = 5,
-            max_value = 50,
-            value = 15
-        )
+    if optimization_mode.startswith("⚡"):
 
-    with c3:
-        cv = st.slider(
-            "Cross-Validation folds",
-            min_value = 3,
-            max_value = 10,
-            value = 5
-        )
+        with c2:
+            st.metric("Trials", 5)
+
+        with c3:
+            st.metric("CV Folds", 3)
+
+        number_trials = 5
+        cv = 3
+
+    else:
+
+        with c2:
+            number_trials = st.slider(
+                "Number of Trials",
+                5,
+                50,
+                15
+            )
+
+        with c3:
+            cv = st.slider(
+                "Cross Validation Folds",
+                3,
+                10,
+                5
+            )
 
 ##########################################################
 # Search Space
@@ -230,14 +266,14 @@ def render():
                     trial.suggest_int(
                         "n_estimators",
                         50,
-                        300
+                        120 if optimization_mode.startswith("⚡") else 300
                     ),
 
                     "max_depth":
                     trial.suggest_int(
                         "max_depth",
                         3,
-                        20
+                        10 if optimization_mode.startswith("⚡") else 20
                     ),
 
                     "min_samples_split":
@@ -270,21 +306,21 @@ def render():
                     trial.suggest_int(
                         "n_estimators",
                         50,
-                        300
+                        120 if optimization_mode.startswith("⚡") else 300
                     ),
 
                     "learning_rate":
                     trial.suggest_float(
                         "learning_rate",
-                        0.01,
-                        0.3
+                        0.05 if optimization_mode.startswith("⚡") else 0.01,
+                        0.20 if optimization_mode.startswith("⚡") else 0.30
                     ),
 
                     "max_depth":
                     trial.suggest_int(
                         "max_depth",
                         2,
-                        10
+                        6 if optimization_mode.startswith("⚡") else 10
                     ),
 
                     "random_state":
@@ -300,7 +336,8 @@ def render():
                 X_train,
                 y_train,
                 cv=cv,
-                scoring="r2"
+                scoring="r2",
+                n_jobs=-1
             )
 
             score = scores.mean()
